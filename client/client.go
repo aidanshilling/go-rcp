@@ -23,7 +23,7 @@ func rpcadd(argA int64, argB int64) int64 {
 
 	defer conn.Close()
 
-	msg := createMsg(argA, argB)
+	msg := marshalMsg(argA, argB)
 	conn.Write(msg)
 
 	buf := make([]byte, 1024)
@@ -37,7 +37,7 @@ func rpcadd(argA int64, argB int64) int64 {
 	return res.Result
 }
 
-func createMsg(argA int64, argB int64) []byte {
+func marshalMsg(argA int64, argB int64) []byte {
 	msg := add.AddMsg{ArgA: argA, ArgB: argB}
 	data, err := json.Marshal(msg)
 	if err != nil {
