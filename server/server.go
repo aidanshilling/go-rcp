@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"go-rcp/add"
 	"log"
@@ -38,7 +37,7 @@ func main() {
 			}
 
 			msg := add.ReadAddMsg(buf[:n])
-			data := marshalAddResult(msg)
+			data := add.MarshalAddResult(msg)
 
 			fmt.Println("Incoming:", string(buf[:n]))
 			if _, err := c.Write(data); err != nil {
@@ -46,14 +45,4 @@ func main() {
 			}
 		}(conn)
 	}
-}
-
-func marshalAddResult(msg add.AddMsg) []byte {
-	result := add.AddResult{Result: msg.ArgA + msg.ArgB}
-	data, err := json.Marshal(result)
-	if err != nil {
-		panic(err)
-	}
-
-	return data
 }

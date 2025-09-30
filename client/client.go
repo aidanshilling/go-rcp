@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"go-rcp/add"
 	"log"
@@ -9,8 +8,10 @@ import (
 )
 
 func main() {
-	res := rpcadd(10, 15)
-	fmt.Println("Add result:", res)
+	res1 := rpcadd(10, 15)
+	res2 := rpcadd(10, 20)
+	fmt.Println("Add result 1:", res1)
+	fmt.Println("Add result 2:", res2)
 }
 
 func rpcadd(argA int64, argB int64) int64 {
@@ -23,7 +24,7 @@ func rpcadd(argA int64, argB int64) int64 {
 
 	defer conn.Close()
 
-	msg := marshalMsg(argA, argB)
+	msg := add.MarshalMsg(argA, argB)
 	conn.Write(msg)
 
 	buf := make([]byte, 1024)
@@ -35,15 +36,4 @@ func rpcadd(argA int64, argB int64) int64 {
 
 	res := add.ReadAddResult(buf[:n])
 	return res.Result
-}
-
-func marshalMsg(argA int64, argB int64) []byte {
-	msg := add.AddMsg{ArgA: argA, ArgB: argB}
-	data, err := json.Marshal(msg)
-	if err != nil {
-		fmt.Println("Failed to marshal message")
-		log.Fatal(err)
-	}
-
-	return data
 }
